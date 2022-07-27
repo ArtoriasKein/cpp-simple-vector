@@ -36,8 +36,10 @@ public:
     ArrayPtr& operator=(const ArrayPtr&) = delete;
 
     ArrayPtr& operator=(ArrayPtr&& other) {
+        auto delete_ptr = raw_ptr_;
         raw_ptr_ = other.raw_ptr_;
         other.raw_ptr_ = nullptr;
+        delete delete_ptr;
         return *this;
     }
 
