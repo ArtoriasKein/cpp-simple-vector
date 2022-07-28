@@ -151,7 +151,7 @@ public:
     // Для пустого массива может быть равен (или не равен) nullptr
     Iterator end() noexcept {
         //Iterator result = &items_[size_];
-        return &items_[size_];
+        return items_.Get() + size_;
     }
 
     // Возвращает константный итератор на начало массива
@@ -163,7 +163,7 @@ public:
     // Возвращает итератор на элемент, следующий за последним
     // Для пустого массива может быть равен (или не равен) nullptr
     ConstIterator end() const noexcept {
-        return const_cast<Type*>(&items_[size_]);
+        return const_cast<Type*>(items_.Get() + size_);
     }
 
     // Возвращает константный итератор на начало массива
@@ -175,7 +175,7 @@ public:
     // Возвращает итератор на элемент, следующий за последним
     // Для пустого массива может быть равен (или не равен) nullptr
     ConstIterator cend() const noexcept {
-        return const_cast<Type*>(&items_[size_]);;
+        return const_cast<Type*>(items_.Get() + size_);;
     }
 
     // Изменяет размер массива.
@@ -236,7 +236,7 @@ public:
             ++size_;
         }
         else {
-            std::copy_backward(pos, cend(), &items_[size_ + 1]);
+            std::move_backward(pos, cend(), &items_[size_ + 1]);
             items_[distance_] = value;
             ++size_;
         }
@@ -299,7 +299,7 @@ public:
         if (new_capacity > capacity_) {
             ArrayPtr<Type> tmp(new_capacity);
             if (size_ > 0) {
-                std::move(cbegin(), cend(), &tmp[0]);
+                std::move(begin(), end(), &tmp[0]);
             }
             items_.swap(tmp);
             capacity_ = new_capacity;
@@ -315,7 +315,7 @@ private:
 
 template <typename Type>
 inline bool operator==(const SimpleVector<Type>& lhs, const SimpleVector<Type>& rhs) {
-    return std::equal(lhs, rhs);
+    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 template <typename Type>
