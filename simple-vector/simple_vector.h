@@ -229,14 +229,14 @@ public:
         if (size_ + 1 > capacity_) {
             ArrayPtr<Type> tmp(capacity_ * 2);
             std::move(cbegin(), pos, &tmp[0]);
-            std::move_backward(pos, cend(), &tmp[size_ + 1]);
+            std::move_backward(pos, end(), &tmp[size_ + 1]);
             tmp[distance_] = value;
             items_.swap(tmp);
             capacity_ = capacity_ * 2;
             ++size_;
         }
         else {
-            std::move_backward(pos, cend(), &items_[size_ + 1]);
+            std::move_backward(pos, end(), &items_[size_ + 1]);
             items_[distance_] = value;
             ++size_;
         }
@@ -315,7 +315,7 @@ private:
 
 template <typename Type>
 inline bool operator==(const SimpleVector<Type>& lhs, const SimpleVector<Type>& rhs) {
-    return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+    return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 template <typename Type>
